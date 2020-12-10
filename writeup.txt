@@ -1,0 +1,28 @@
+CIS 551 Project 3 Writeup
+
+Note about Part 3:
+There are 3 things that I want to point out for my attacks in part 3
+- First, some of the pages have a timeout function to make sure everything loads in the correct order. On piazza, it says that this is acceptable, but don't click links too quickly.
+- Second, login attempts are recorded regardless of if they succeed or not
+- Third, history entries are duplicated (something I didn't have time to fix). For example, if a logged in user searches "asdf", it will show up twice, but I honestly don't think this is such a terrible error since an average user will probably think that's just a site bug
+
+* No extra credit was done.
+
+Feedback/Suggestions about the overall project:
+- One of the things that would be wonderful overall would be a VM that we can SSH into. Coding on the VM is extremely slow and inefficient. If we could SSH using VSCode or something like that, it woul be a tremendous improvement
+- I found this project (as someone with very little web experience) to be disproportionately difficult, so I probably spent more than 50 hours total on it. Probably good to attach a warning label to part 3 in the future.
+
+
+Questions:
+
+Defenses Against SQL Injection:
+There are a variety of potential defenses that yay could employ against SQL attacks. Some methods, like filtering specific inputs, are pretty ineffective as we can find creative ways to circumvent them. However, a good way to filter is to used prepared statements. Essentially, prepared statements are like functions that perform the query in a safe manner. Another way that we can approach this problem is via whitelisting, which is to only allow through select inputs and reject everything else. This tends to be more effective than blacklisting. Finally, one the best methods is to just import a pre-defined library to do the filtraton for you, since those dudes have definitely spent a long time thinking about this problem and have come up with comprehensive defenses. 
+
+
+Defenses against CSRF
+One of the effective defenses of CSRF is to generate a CSRF token. This token is unique to a specific iframe that is generated server side, so in theory it would require a XSS attack to obtain the token. Without the token, the attacker would not be able to imitate a valid HTTP request as those would require the token to be included and packaged. It is thus important to generate tokens that are sufficiently cryptographically secure and hard to guess. Another very comprehensive defense is to configure your server to send an HTTP response header that disables iframes from being opened in the first place. A lot of banks do this, and rightfully so. Of course, in any case it is very important to secure the site against XSS attacks, as XSS attacks can potentially enable CSRF attacks.
+
+
+Defenses against XSS 
+Most XSS defense ultimately comes down to sanitizing inputs thoroughly. This can be done manually by filtering for tags such as <script> or <meta> or specific pieces of punctuation. However, these are arguably not great defenses against XSS although they are significantly better than nothing. The issue is that attacks can always find more creative ways of encoding javascript to the point where it is basically unrecognizable. I would argue that a much better way to prevent such attacks is to allow an existing framework/service like Auth0 to do the filtering for you. After all, the people who make those frameworks probably do more consideration than the average programmer. Another method that can be used is to use content security policies. These allow the author of a web page to control where JS can be loaded and executed. This policy can prevent execution of inline script tags within the HTML tags of a page, which mitigates a large portion of the attacks. 
+
